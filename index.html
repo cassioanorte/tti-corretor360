@@ -189,12 +189,138 @@ body {
   margin-top: 20px;
 }
 
+/* --- PDF Download Section --- */
+.pdf-section {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid #2a3040;
+}
+
+.pdf-section h2 {
+  font-size: 1.6em;
+  color: #3498db;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.pdf-modulo {
+  margin-bottom: 30px;
+}
+
+.pdf-modulo-title {
+  font-size: 1.15em;
+  color: #e0e0e0;
+  background: #1a1f2e;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border-left: 4px solid #27ae60;
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.pdf-modulo-title:hover {
+  background: #222940;
+}
+
+.pdf-modulo-title .pdf-count {
+  font-size: 0.8em;
+  background: #27ae60;
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+
+.pdf-modulo-title .pdf-toggle {
+  color: #6b7a90;
+  font-size: 0.9em;
+  transition: transform 0.3s;
+}
+
+.pdf-modulo-title.open .pdf-toggle {
+  transform: rotate(90deg);
+}
+
+.pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+  padding: 0 10px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.3s;
+}
+
+.pdf-grid.expanded {
+  max-height: 10000px;
+  padding: 8px 10px 16px;
+}
+
+.pdf-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #151922;
+  border: 1px solid #2a3040;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: #e0e0e0;
+}
+
+.pdf-item:hover {
+  border-color: #27ae60;
+  background: #1a2520;
+  transform: translateY(-1px);
+}
+
+.pdf-item .pdf-icon {
+  font-size: 1.5em;
+  flex-shrink: 0;
+}
+
+.pdf-item .pdf-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-item .pdf-name {
+  font-size: 0.85em;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-item .pdf-meta {
+  font-size: 0.7em;
+  color: #6b7a90;
+  margin-top: 2px;
+}
+
+.pdf-item .pdf-download {
+  color: #27ae60;
+  font-size: 1.2em;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.pdf-item:hover .pdf-download {
+  opacity: 1;
+}
+
 @media (max-width: 768px) {
   .header h1 { font-size: 1.5em; }
   .video-grid { grid-template-columns: 1fr; padding: 10px; }
   .stats { gap: 10px; }
   .stat { padding: 10px 15px; }
   .stat .number { font-size: 1.3em; }
+  .pdf-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -208,6 +334,12 @@ body {
 <div class="container">
   <div class="stats" id="stats"></div>
   <div id="modulos"></div>
+
+  <!-- PDFs Section -->
+  <div class="pdf-section" id="pdfSection">
+    <h2>📥 Download de PDFs</h2>
+    <div id="pdfModulos"></div>
+  </div>
 </div>
 
 <div class="footer">
@@ -216,6 +348,7 @@ body {
   <p style="margin-top:8px">Vídeos servidos localmente — abra este arquivo no navegador</p>
 </div>
 
+<script src="pdfs-data.js"></script>
 <script>
 // Dados dos vídeos
 const VIDEOS = [
@@ -333,6 +466,47 @@ ordem.forEach(modId => {
       <div class="video-grid">${cards}</div>
     </div>`;
 });
+
+// ============================================================
+// SECTION: PDF Downloads
+// ============================================================
+if (typeof PDFS_MODULOS !== 'undefined' && PDFS_MODULOS.length > 0) {
+  const pdfSection = document.getElementById('pdfModulos');
+  
+  PDFS_MODULOS.forEach(mod => {
+    let pdfItems = '';
+    mod.pdfs.forEach(pdf => {
+      const displayName = pdf.file_id
+        ? `📄 Aula ${pdf.file_id}.pdf`
+        : pdf.filename.replace(/\.pdf$/i, '');
+      const meta = pdf.size_kb >= 1000
+        ? `${(pdf.size_kb / 1000).toFixed(1)} MB`
+        : `${pdf.size_kb} KB`;
+      
+      pdfItems += `
+        <a href="${pdf.path}" class="pdf-item" download>
+          <span class="pdf-icon">📕</span>
+          <span class="pdf-info">
+            <span class="pdf-name" title="${pdf.filename}">${displayName}</span>
+            <span class="pdf-meta">${meta}</span>
+          </span>
+          <span class="pdf-download">⬇</span>
+        </a>`;
+    });
+    
+    const modDiv = document.createElement('div');
+    modDiv.className = 'pdf-modulo';
+    modDiv.innerHTML = `
+      <div class="pdf-modulo-title" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('expanded')">
+        <span>${mod.name}</span>
+        <span class="pdf-count">${mod.pdfs.length} PDFs</span>
+        <span class="pdf-toggle">▶</span>
+      </div>
+      <div class="pdf-grid expanded">${pdfItems}</div>
+    `;
+    pdfSection.appendChild(modDiv);
+  });
+}
 </script>
 
 </body>
