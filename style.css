@@ -1,0 +1,541 @@
+/* ============================================================
+   TTI | CORRETOR 360 — Tema Escuro Profissional
+   ============================================================
+   Cores: fundo #1a1a2e | destaque #e94560 | texto #eee
+   Fontes grandes para acessibilidade visual
+   ============================================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px; /* base maior para acessibilidade */
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #1a1a2e;
+  color: #eee;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+a { color: #e94560; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #16213e; }
+::-webkit-scrollbar-thumb { background: #e94560; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #ff6b81; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+header {
+  background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+  border-bottom: 2px solid #e94560;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  background: #e94560;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.25rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #eee;
+}
+
+.header-subtitle {
+  font-size: 0.8rem;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.header-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar-outer {
+  width: 200px;
+  height: 10px;
+  background: #16213e;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #e94560, #ff6b81);
+  border-radius: 5px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  color: #aaa;
+  min-width: 48px;
+  text-align: right;
+}
+
+/* Mobile menu toggle */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #eee;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 340px;
+  min-width: 340px;
+  background: #16213e;
+  border-right: 1px solid #0f3460;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #0f3460;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e94560;
+}
+
+.sidebar-stats {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.module-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.module-item {
+  border-bottom: 1px solid #0f3460;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  gap: 8px;
+}
+
+.module-header:hover {
+  background: rgba(233, 69, 96, 0.08);
+}
+
+.module-header.active-module {
+  background: rgba(233, 69, 96, 0.15);
+  border-left: 3px solid #e94560;
+}
+
+.module-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.module-number {
+  font-size: 0.7rem;
+  color: #e94560;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.module-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.module-progress {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.module-chevron {
+  color: #888;
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.module-header.open .module-chevron {
+  transform: rotate(90deg);
+}
+
+/* Lesson list inside module */
+.lesson-list {
+  display: none;
+  background: rgba(0,0,0,0.15);
+}
+
+.module-header.open + .lesson-list {
+  display: block;
+}
+
+.lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px 10px 36px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 0.85rem;
+  color: #ccc;
+  border-left: 3px solid transparent;
+}
+
+.lesson-item:hover {
+  background: rgba(233, 69, 96, 0.08);
+}
+
+.lesson-item.active {
+  background: rgba(233, 69, 96, 0.12);
+  border-left-color: #e94560;
+  color: #fff;
+  font-weight: 500;
+}
+
+.lesson-icon {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.lesson-icon.done { color: #4caf50; }
+.lesson-icon.current { color: #e94560; }
+.lesson-icon.pending { color: #555; }
+
+.lesson-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lesson-duration {
+  font-size: 0.7rem;
+  color: #666;
+  flex-shrink: 0;
+}
+
+/* --- Player Area --- */
+.player-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.video-container {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  margin-bottom: 20px;
+}
+
+.video-container video {
+  width: 100%;
+  display: block;
+  max-height: 60vh;
+  background: #000;
+}
+
+.video-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0f3460;
+  color: #888;
+  gap: 12px;
+}
+
+.video-placeholder .icon {
+  font-size: 4rem;
+  opacity: 0.5;
+}
+
+.video-placeholder .text {
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+/* --- Lesson Info Bar --- */
+.lesson-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.lesson-info-left h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.lesson-info-left .breadcrumb {
+  font-size: 0.8rem;
+  color: #e94560;
+  margin-bottom: 4px;
+}
+
+.lesson-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: #e94560;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #ff6b81;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #555;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: #16213e;
+  color: #ccc;
+  border: 1px solid #0f3460;
+}
+
+.btn-secondary:hover {
+  background: #1e2d52;
+  color: #fff;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-complete {
+  background: #4caf50;
+  color: #fff;
+}
+
+.btn-complete:hover {
+  background: #66bb6a;
+}
+
+.btn-complete.done {
+  background: #555;
+}
+
+/* --- Module Description --- */
+.module-desc {
+  background: #16213e;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border-left: 3px solid #e94560;
+}
+
+.module-desc p {
+  color: #bbb;
+  font-size: 0.9rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  padding: 12px 24px;
+  border-top: 1px solid #0f3460;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #555;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RESPONSIVE — Tablet
+   ============================================================ */
+@media (max-width: 900px) {
+  html { font-size: 16px; }
+
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+  }
+
+  .player-area {
+    padding: 16px;
+  }
+
+  .header-progress {
+    display: none;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — Mobile
+   ============================================================ */
+@media (max-width: 700px) {
+  header {
+    padding: 10px 16px;
+  }
+
+  .header-title { font-size: 0.95rem; }
+  .header-subtitle { display: none; }
+  .header-progress { display: none; }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    min-width: 300px;
+    z-index: 200;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 199;
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+
+  .player-area {
+    padding: 12px;
+  }
+
+  .video-container {
+    border-radius: 8px;
+  }
+
+  .lesson-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lesson-info-left h1 {
+    font-size: 1.15rem;
+  }
+
+  .lesson-nav {
+    width: 100%;
+  }
+
+  .lesson-nav .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 10px 16px;
+  }
+}

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTI | Corretor 360 - Vídeos do Curso</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0f1117;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.header {
+  background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%);
+  padding: 40px 20px;
+  text-align: center;
+  border-bottom: 3px solid #3498db;
+}
+
+.header h1 {
+  font-size: 2.2em;
+  color: #3498db;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #8892a4;
+  font-size: 1.1em;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0 30px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: #1a1f2e;
+  padding: 15px 25px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #2a3040;
+}
+
+.stat .number {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #3498db;
+}
+
+.stat .label {
+  font-size: 0.85em;
+  color: #8892a4;
+  margin-top: 4px;
+}
+
+.modulo-section {
+  margin-bottom: 40px;
+}
+
+.modulo-title {
+  font-size: 1.5em;
+  color: #3498db;
+  padding: 12px 20px;
+  background: #1a1f2e;
+  border-radius: 10px 10px 0 0;
+  border-left: 4px solid #3498db;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modulo-count {
+  font-size: 0.7em;
+  background: #3498db;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  background: #151922;
+  border-radius: 0 0 10px 10px;
+}
+
+.video-card {
+  background: #1a1f2e;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #2a3040;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  border-color: #3498db;
+}
+
+.video-card video {
+  width: 100%;
+  background: #000;
+  display: block;
+}
+
+.video-info {
+  padding: 12px 16px;
+}
+
+.video-info .aula-titulo {
+  font-weight: 600;
+  color: #e0e0e0;
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.video-info .aula-meta {
+  font-size: 0.8em;
+  color: #6b7a90;
+}
+
+.video-controls {
+  padding: 8px 16px 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #2a3040;
+  background: #1e2433;
+  color: #8892a4;
+  cursor: pointer;
+  font-size: 0.8em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #2a3040;
+  color: #3498db;
+  border-color: #3498db;
+}
+
+.btn.primary {
+  background: #3498db;
+  color: #fff;
+  border-color: #3498db;
+}
+
+.btn.primary:hover {
+  background: #2980b9;
+}
+
+.empty-modulo {
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7a90;
+  background: #151922;
+  border-radius: 0 0 10px 10px;
+}
+
+.footer {
+  text-align: center;
+  padding: 30px;
+  color: #4a5568;
+  font-size: 0.85em;
+  border-top: 1px solid #1a1f2e;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.5em; }
+  .video-grid { grid-template-columns: 1fr; padding: 10px; }
+  .stats { gap: 10px; }
+  .stat { padding: 10px 15px; }
+  .stat .number { font-size: 1.3em; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏠 TTI | Corretor 360</h1>
+  <p>Vídeos narrados de todas as aulas do curso</p>
+</div>
+
+<div class="container">
+  <div class="stats" id="stats"></div>
+  <div id="modulos"></div>
+</div>
+
+<div class="footer">
+  <p>Curso TTI - Técnico em Transações Imobiliárias | IBREP</p>
+  <p>Vídeos gerados automaticamente com narração por IA (voz Francisca)</p>
+  <p style="margin-top:8px">Vídeos servidos localmente — abra este arquivo no navegador</p>
+</div>
+
+<script>
+// Dados dos vídeos
+const VIDEOS = [
+  {"filename":"Rota_de_Aprendizagem_10398.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10398","size_mb":5.6},
+  {"filename":"Rota_de_Aprendizagem_10399.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10399","size_mb":2.3},
+  {"filename":"Rota_de_Aprendizagem_10403.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10403","size_mb":3.3},
+  {"filename":"Rota_de_Aprendizagem_10406.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10406","size_mb":0.0},
+  {"filename":"Rota_de_Aprendizagem_10421.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10421","size_mb":5.8},
+  {"filename":"Rota_de_Aprendizagem_10424.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10424","size_mb":3.2},
+  {"filename":"Rota_de_Aprendizagem_10442.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10442","size_mb":0.1},
+  {"filename":"Módulo_1_-_Fundamentos_10444.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10444","size_mb":5.5},
+  {"filename":"Módulo_1_-_Fundamentos_10445.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10445","size_mb":7.3},
+  {"filename":"Módulo_1_-_Fundamentos_10446.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10446","size_mb":4.6},
+  {"filename":"Módulo_2_-_Construção_Civil_10511.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10511","size_mb":5.1},
+  {"filename":"Módulo_2_-_Construção_Civil_10512.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10512","size_mb":4.8},
+  {"filename":"Módulo_2_-_Construção_Civil_10513.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10513","size_mb":4.5},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10576.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10576","size_mb":2.4},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10577.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10577","size_mb":1.7},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10578.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10578","size_mb":2.5},
+  {"filename":"Módulo_4_-_Negociação_10635.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10635","size_mb":5.1},
+  {"filename":"Módulo_4_-_Negociação_10636.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10636","size_mb":0.3},
+  {"filename":"Módulo_4_-_Negociação_10637.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10637","size_mb":0.9},
+  {"filename":"Módulo_5_-_Documentação_10674.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10674","size_mb":0.3},
+  {"filename":"Módulo_5_-_Documentação_10675.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10675","size_mb":4.2},
+  {"filename":"Módulo_5_-_Documentação_10676.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10676","size_mb":1.5},
+  {"filename":"Módulo_5_-_Documentação_10677.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10677","size_mb":1.7},
+  {"filename":"Módulo_5_-_Documentação_10678.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10678","size_mb":1.7},
+  {"filename":"Módulo_5_-_Documentação_10679.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10679","size_mb":2.0},
+  {"filename":"Módulo_5_-_Documentação_10680.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10680","size_mb":1.2},
+  {"filename":"Módulo_5_-_Documentação_10681.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10681","size_mb":2.6},
+  {"filename":"Módulo_5_-_Documentação_10682.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10682","size_mb":0.7},
+  {"filename":"Módulo_5_-_Documentação_10683.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10683","size_mb":4.8},
+  {"filename":"Módulo_5_-_Documentação_10684.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10684","size_mb":5.6},
+  {"filename":"Módulo_5_-_Documentação_10685.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10685","size_mb":5.1},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10694.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10694","size_mb":6.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10695.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10695","size_mb":6.6},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10696.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10696","size_mb":5.8},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10697.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10697","size_mb":5.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10698.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10698","size_mb":5.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10699.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10699","size_mb":6.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10700.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10700","size_mb":4.8},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10701.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10701","size_mb":5.5},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10702.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10702","size_mb":7.5},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10703.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10703","size_mb":6.3},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10704.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10704","size_mb":5.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10705.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10705","size_mb":4.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10706.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10706","size_mb":1.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10709.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10709","size_mb":7.1},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10710.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10710","size_mb":4.7}
+];
+
+// Agrupar por módulo
+const modulos = {};
+VIDEOS.forEach(v => {
+  if (!modulos[v.modulo_id]) {
+    modulos[v.modulo_id] = {
+      id: v.modulo_id,
+      name: v.modulo_name,
+      videos: []
+    };
+  }
+  modulos[v.modulo_id].videos.push(v);
+});
+
+// Ordem dos módulos
+const ordem = ['930', '981', '982', '983', '984', '985', '986'];
+
+// Renderizar stats
+let totalVideos = VIDEOS.length;
+let totalSize = VIDEOS.reduce((sum, v) => sum + v.size_mb, 0);
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><div class="number">${ordem.length}</div><div class="label">Módulos</div></div>
+  <div class="stat"><div class="number">${totalVideos}</div><div class="label">Vídeos</div></div>
+  <div class="stat"><div class="number">${totalSize.toFixed(0)} MB</div><div class="label">Tamanho Total</div></div>
+`;
+
+// Renderizar módulos
+const modulosDiv = document.getElementById('modulos');
+ordem.forEach(modId => {
+  const mod = modulos[modId];
+  if (!mod) {
+    modulosDiv.innerHTML += `
+      <div class="modulo-section">
+        <div class="modulo-title">📦 Módulo ${modId} <span class="modulo-count">0</span></div>
+        <div class="empty-modulo">Nenhum vídeo disponível neste módulo. Os arquivos podem não conter texto extraível.</div>
+      </div>`;
+    return;
+  }
+  
+  let cards = '';
+  mod.videos.forEach((v, i) => {
+    cards += `
+      <div class="video-card">
+        <video controls preload="metadata" poster="">
+          <source src="${v.filename}" type="video/mp4">
+          Seu navegador não suporta vídeo HTML5.
+        </video>
+        <div class="video-info">
+          <div class="aula-titulo">📖 Aula ${v.file_id}</div>
+          <div class="aula-meta">${v.size_mb} MB • Arquivo #${v.file_id}</div>
+        </div>
+        <div class="video-controls">
+          <a href="${v.filename}" download class="btn primary">⬇ Download</a>
+          <a href="${v.filename}" target="_blank" class="btn">🔗 Abrir</a>
+        </div>
+      </div>`;
+  });
+  
+  modulosDiv.innerHTML += `
+    <div class="modulo-section">
+      <div class="modulo-title">
+        ${mod.name}
+        <span class="modulo-count">${mod.videos.length} vídeos</span>
+      </div>
+      <div class="video-grid">${cards}</div>
+    </div>`;
+});
+</script>
+
+</body>
+</html>
