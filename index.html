@@ -333,7 +333,8 @@ body {
 
 <div class="container">
   <div class="stats" id="stats"></div>
-  <div id="modulos"></div>
+  
+<div id="modulos"></div>
 
   <!-- PDFs Section -->
   <div class="pdf-section" id="pdfSection">
@@ -349,6 +350,168 @@ body {
 </div>
 
 <script src="pdfs-data.js"></script>
+<script>
+// Dados dos vídeos
+const VIDEOS = [
+  {"filename":"Rota_de_Aprendizagem_10398.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10398","size_mb":5.6},
+  {"filename":"Rota_de_Aprendizagem_10399.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10399","size_mb":2.3},
+  {"filename":"Rota_de_Aprendizagem_10403.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10403","size_mb":3.3},
+  {"filename":"Rota_de_Aprendizagem_10406.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10406","size_mb":0.0},
+  {"filename":"Rota_de_Aprendizagem_10421.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10421","size_mb":5.8},
+  {"filename":"Rota_de_Aprendizagem_10424.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10424","size_mb":3.2},
+  {"filename":"Rota_de_Aprendizagem_10442.mp4","modulo_id":"930","modulo_name":"📋 Rota de Aprendizagem","file_id":"10442","size_mb":0.1},
+  {"filename":"Módulo_1_-_Fundamentos_10444.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10444","size_mb":5.5},
+  {"filename":"Módulo_1_-_Fundamentos_10445.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10445","size_mb":7.3},
+  {"filename":"Módulo_1_-_Fundamentos_10446.mp4","modulo_id":"981","modulo_name":"📚 Módulo 1 - Fundamentos da Corretagem","file_id":"10446","size_mb":4.6},
+  {"filename":"Módulo_2_-_Construção_Civil_10511.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10511","size_mb":5.1},
+  {"filename":"Módulo_2_-_Construção_Civil_10512.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10512","size_mb":4.8},
+  {"filename":"Módulo_2_-_Construção_Civil_10513.mp4","modulo_id":"982","modulo_name":"🏗️ Módulo 2 - Construção Civil","file_id":"10513","size_mb":4.5},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10576.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10576","size_mb":2.4},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10577.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10577","size_mb":1.7},
+  {"filename":"Módulo_3_-_Mercado_Imobiliário_10578.mp4","modulo_id":"983","modulo_name":"🏘️ Módulo 3 - Mercado Imobiliário","file_id":"10578","size_mb":2.5},
+  {"filename":"Módulo_4_-_Negociação_10635.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10635","size_mb":5.1},
+  {"filename":"Módulo_4_-_Negociação_10636.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10636","size_mb":0.3},
+  {"filename":"Módulo_4_-_Negociação_10637.mp4","modulo_id":"984","modulo_name":"🤝 Módulo 4 - Negociação e Vendas","file_id":"10637","size_mb":0.9},
+  {"filename":"Módulo_5_-_Documentação_10674.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10674","size_mb":0.3},
+  {"filename":"Módulo_5_-_Documentação_10675.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10675","size_mb":4.2},
+  {"filename":"Módulo_5_-_Documentação_10676.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10676","size_mb":1.5},
+  {"filename":"Módulo_5_-_Documentação_10677.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10677","size_mb":1.7},
+  {"filename":"Módulo_5_-_Documentação_10678.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10678","size_mb":1.7},
+  {"filename":"Módulo_5_-_Documentação_10679.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10679","size_mb":2.0},
+  {"filename":"Módulo_5_-_Documentação_10680.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10680","size_mb":1.2},
+  {"filename":"Módulo_5_-_Documentação_10681.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10681","size_mb":2.6},
+  {"filename":"Módulo_5_-_Documentação_10682.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10682","size_mb":0.7},
+  {"filename":"Módulo_5_-_Documentação_10683.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10683","size_mb":4.8},
+  {"filename":"Módulo_5_-_Documentação_10684.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10684","size_mb":5.6},
+  {"filename":"Módulo_5_-_Documentação_10685.mp4","modulo_id":"985","modulo_name":"📄 Módulo 5 - Documentação Imobiliária","file_id":"10685","size_mb":5.1},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10694.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10694","size_mb":6.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10695.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10695","size_mb":6.6},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10696.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10696","size_mb":5.8},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10697.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10697","size_mb":5.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10698.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10698","size_mb":5.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10699.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10699","size_mb":6.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10700.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10700","size_mb":4.8},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10701.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10701","size_mb":5.5},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10702.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10702","size_mb":7.5},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10703.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10703","size_mb":6.3},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10704.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10704","size_mb":5.9},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10705.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10705","size_mb":4.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10706.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10706","size_mb":1.7},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10709.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10709","size_mb":7.1},
+  {"filename":"Módulo_6_-_Avaliação_de_Imóveis_10710.mp4","modulo_id":"986","modulo_name":"📊 Módulo 6 - Avaliação de Imóveis","file_id":"10710","size_mb":4.7}
+];
+
+// Agrupar por módulo
+const modulos = {};
+VIDEOS.forEach(v => {
+  if (!modulos[v.modulo_id]) {
+    modulos[v.modulo_id] = {
+      id: v.modulo_id,
+      name: v.modulo_name,
+      videos: []
+    };
+  }
+  modulos[v.modulo_id].videos.push(v);
+});
+
+// Ordem dos módulos
+const ordem = ['930', '981', '982', '983', '984', '985', '986'];
+
+// Renderizar stats
+let totalVideos = VIDEOS.length;
+let totalSize = VIDEOS.reduce((sum, v) => sum + v.size_mb, 0);
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><div class="number">${ordem.length}</div><div class="label">Módulos</div></div>
+  <div class="stat"><div class="number">${totalVideos}</div><div class="label">Vídeos</div></div>
+  <div class="stat"><div class="number">${totalSize.toFixed(0)} MB</div><div class="label">Tamanho Total</div></div>
+`;
+
+// Renderizar módulos
+const modulosDiv = document.getElementById('modulos');
+ordem.forEach(modId => {
+  const mod = modulos[modId];
+  if (!mod) {
+    modulosDiv.innerHTML += `
+      <div class="modulo-section">
+        <div class="modulo-title">📦 Módulo ${modId} <span class="modulo-count">0</span></div>
+        <div class="empty-modulo">Nenhum vídeo disponível neste módulo. Os arquivos podem não conter texto extraível.</div>
+      </div>`;
+    return;
+  }
+  
+  let cards = '';
+  mod.videos.forEach((v, i) => {
+    cards += `
+      <div class="video-card">
+        <video controls preload="metadata" poster="">
+          <source src="${v.filename}" type="video/mp4">
+          Seu navegador não suporta vídeo HTML5.
+        </video>
+        <div class="video-info">
+          <div class="aula-titulo">📖 Aula ${v.file_id}</div>
+          <div class="aula-meta">${v.size_mb} MB • Arquivo #${v.file_id}</div>
+        </div>
+        <div class="video-controls">
+          <a href="${v.filename}" download class="btn primary">⬇ Download</a>
+          <a href="${v.filename}" target="_blank" class="btn">🔗 Abrir</a>
+        </div>
+      </div>`;
+  });
+  
+  modulosDiv.innerHTML += `
+    <div class="modulo-section">
+      <div class="modulo-title">
+        ${mod.name}
+        <span class="modulo-count">${mod.videos.length} vídeos</span>
+      </div>
+      <div class="video-grid">${cards}</div>
+    </div>`;
+});
+
+// ============================================================
+// SECTION: PDF Downloads
+// ============================================================
+if (typeof PDFS_MODULOS !== 'undefined' && PDFS_MODULOS.length > 0) {
+  const pdfSection = document.getElementById('pdfModulos');
+  
+  PDFS_MODULOS.forEach(mod => {
+    let pdfItems = '';
+    mod.pdfs.forEach(pdf => {
+      const displayName = pdf.file_id
+        ? `📄 Aula ${pdf.file_id}.pdf`
+        : pdf.filename.replace(/\.pdf$/i, '');
+      const meta = pdf.size_kb >= 1000
+        ? `${(pdf.size_kb / 1000).toFixed(1)} MB`
+        : `${pdf.size_kb} KB`;
+      
+      pdfItems += `
+        <a href="${pdf.path}" class="pdf-item" download>
+          <span class="pdf-icon">📕</span>
+          <span class="pdf-info">
+            <span class="pdf-name" title="${pdf.filename}">${displayName}</span>
+            <span class="pdf-meta">${meta}</span>
+          </span>
+          <span class="pdf-download">⬇</span>
+        </a>`;
+    });
+    
+    const modDiv = document.createElement('div');
+    modDiv.className = 'pdf-modulo';
+    modDiv.innerHTML = `
+      <div class="pdf-modulo-title" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('expanded')">
+        <span>${mod.name}</span>
+        <span class="pdf-count">${mod.pdfs.length} PDFs</span>
+        <span class="pdf-toggle">▶</span>
+      </div>
+      <div class="pdf-grid expanded">${pdfItems}</div>
+    `;
+    pdfSection.appendChild(modDiv);
+  });
+}
+</script>
+
+</body>
+</html><script src="pdfs-data.js"></script>
 <script>
 // Dados dos vídeos
 const VIDEOS = [
