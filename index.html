@@ -190,6 +190,59 @@ body {
   margin-top: 20px;
 }
 
+/* --- Video ZIP Download --- */
+.btn-video-zip {
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid #7c3aed;
+  background: linear-gradient(135deg, #1a1028 0%, #1a1f2e 100%);
+  color: #a78bfa;
+  cursor: pointer;
+  font-size: 0.82em;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.btn-video-zip:hover {
+  background: linear-gradient(135deg, #2a1a40 0%, #222940 100%);
+  border-color: #8b5cf6;
+  color: #c4b5fd;
+  transform: translateY(-1px);
+}
+.btn-video-zip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.video-zip-progress {
+  display: none;
+  margin: 8px 20px 12px;
+  padding: 10px 14px;
+  background: #1a1028;
+  border-radius: 8px;
+  border: 1px solid #2a2050;
+}
+.video-zip-progress.active { display: block; }
+.video-zip-progress .vz-bar-bg {
+  height: 6px;
+  background: #2a2050;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.video-zip-progress .vz-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+.video-zip-progress .vz-text { font-size: 0.78em; color: #a78bfa; }
+.video-zip-progress .vz-done { color: #27ae60; font-weight: 600; }
+
 /* --- PDF Download Section --- */
 .pdf-section {
   margin-top: 40px;
@@ -512,15 +565,112 @@ ordem.forEach(modId => {
       </div>`;
   });
   
+  // Safe filename for ZIP
+  const zipSafeVid = mod.name
+    .replace(/[^\w\sáéíóúãõâêîôûàèìòùçÁÉÍÓÚÃÕÂÊÎÔÛÀÈÌÒÙÇ-]/g, '')
+    .replace(/\s+/g, '_')
+    .substring(0, 60);
+  
   modulosDiv.innerHTML += `
     <div class="modulo-section">
       <div class="modulo-title">
         ${mod.name}
         <span class="modulo-count">${mod.videos.length} vídeos</span>
+        <button id="btnVideoZip${modId}" class="btn-video-zip" onclick="downloadVideoZipModule('${modId}')" title="Baixar todos os vídeos deste módulo em ZIP">
+          🎬 Baixar Vídeos ZIP
+        </button>
+      </div>
+      <div class="video-zip-progress" id="videoZipProgress${modId}">
+        <span class="vz-text">Preparando ZIP de vídeos...</span>
+        <div class="vz-bar-bg"><div class="vz-bar-fill"></div></div>
       </div>
       <div class="video-grid">${cards}</div>
     </div>`;
 });
+
+// ============================================================
+// FUNCTION: Download ZIP of a module's VIDEOS using JSZip
+// ============================================================
+async function downloadVideoZipModule(modId) {
+  const videos = VIDEOS.filter(v => String(v.modulo_id) === String(modId));
+  if (videos.length === 0) { alert('Nenhum vídeo neste módulo.'); return; }
+  
+  const totalMB = videos.reduce((sum, v) => sum + (v.size_mb || 0), 0);
+  const sizeText = totalMB > 0 ? `~${totalMB.toFixed(0)} MB` : 'tamanho desconhecido';
+  
+  const confirmed = confirm(
+    `⚠️ Atenção: Este ZIP conterá ${videos.length} vídeos (${sizeText}).\n\n` +
+    `O download pode demorar bastante (vários minutos), pois cada vídeo precisa ser carregado na memória do navegador.\n\n` +
+    `⚠️ Arquivo grande (${sizeText}). Recomendamos usar uma conexão estável.\n\n` +
+    `Deseja continuar?`
+  );
+  if (!confirmed) return;
+  
+  const progressDiv = document.getElementById('videoZipProgress' + modId);
+  if (!progressDiv) return;
+  const textEl = progressDiv.querySelector('.vz-text');
+  const barFill = progressDiv.querySelector('.vz-bar-fill');
+  const btn = document.getElementById('btnVideoZip' + modId);
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando...';
+  progressDiv.classList.add('active');
+  textEl.textContent = `⚠️ Arquivo grande (~${totalMB.toFixed(0)} MB). O download pode demorar. Iniciando...`;
+  barFill.style.width = '0%';
+  
+  try {
+    const zip = new JSZip();
+    const total = videos.length;
+    let completed = 0, failed = 0;
+    
+    for (let i = 0; i < videos.length; i++) {
+      const video = videos[i];
+      try {
+        textEl.textContent = `⬇ [${i + 1}/${total}] Baixando: ${video.filename} (${(video.size_mb||0).toFixed(1)} MB)...`;
+        const response = await fetch(video.filename);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        zip.file(video.filename, blob, { binary: true });
+        completed++;
+      } catch (err) {
+        failed++;
+        console.warn(`Falha ao baixar ${video.filename}:`, err);
+      }
+      const pct = Math.round(((completed + failed) / total) * 90);
+      barFill.style.width = pct + '%';
+    }
+    
+    if (completed === 0) throw new Error('Nenhum vídeo pôde ser baixado.');
+    
+    textEl.textContent = '🗜️ Gerando arquivo ZIP (isso pode demorar com arquivos grandes)...';
+    barFill.style.width = '95%';
+    
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    const mod = modulos[modId];
+    const safeName = mod ? mod.name.replace(/[^\w\sáéíóúãõâêîôûàèìòùçÁÉÍÓÚÃÕÂÊÎÔÛÀÈÌÒÙÇ-]/g, '').replace(/\s+/g, '_').substring(0, 50) : `Modulo_${modId}`;
+    a.download = `Videos_${safeName}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    barFill.style.width = '100%';
+    const zipMB = (zipBlob.size / (1024 * 1024)).toFixed(1);
+    textEl.innerHTML = `<span class="vz-done">✅ ZIP gerado com sucesso! (${zipMB} MB, ${completed} vídeos)</span>`;
+    if (failed > 0) textEl.innerHTML += ` <span style="color:#e74c3c">⚠️ ${failed} falhas.</span>`;
+  } catch (err) {
+    console.error('Erro ao gerar ZIP de vídeos:', err);
+    textEl.innerHTML = `<span style="color:#e74c3c">❌ Erro: ${err.message}</span>`;
+    barFill.style.width = '0%';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🎬 Baixar Vídeos ZIP';
+  }
+}
 
 // ============================================================
 // FUNCTION: Download ZIP of a module's PDFs using JSZip
